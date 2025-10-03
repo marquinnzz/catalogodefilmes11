@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    
+    <h1>Catalogo de filmes</h1>
+
+    <form id="cadastro-filmes">
+         <h2>Adicionar Novo Filme</h2>
+         <div>
+            <label for="titulo">Titulo do Fime</label>
+            <input type="text" id="titulo" required>
+         </div>
+
+         <div>
+            <label for="sinopse">Sinopse:</label>
+            <texterea id="sinipse" required></texterea>
+         </div>
+
+         <button type="submit">Adicionar Filme</button>
+    </form>
+
+    <hr>
+
+    <h2>Minha Lista de Filmes</h2>
+
+    <div id="lista-filmes">
+        <p>Nenhum filme cadastrado ainda.</p>
+    </div>
+
+    <script>
+        // 1. ARMMAZENAMENTO DE DADOS
+        // Array global que iria guardar todos os filmes como objetivo.
+        // Ex: [{ titulo: "Filme 'X', sinopse: 'Sinopse Y' }]
+        const catalogo = [];
+
+        // 2. CAPTURA DE ELEMENTOS DO DOM (Document Objetivo Model)
+        // Capturamos os elementos HTML que vamos interagir, usando seus IDs.
+        const form = document.getElementByID('cadastro-filmes');
+        const listaFilmesContainer = document.getElementById('lista-filmes');
+
+        //--------------------------------------------------------------------
+        //FUNÇÃO DE REMOÇÃO
+        //--------------------------------------------------------------------
+        /**
+         * Remove um filme do Array de dados e do elemento HTML na lista.
+         * @param (number) indice - A posição do filme no Array 'catalogo'.
+         * @param {HTMLElement} elementoDOM - O elemento <div> do filme a ser removido da tela.
+         */
+        function removerFilme(indice, elemenoDOM) {
+            // A. REMOÇÃO DO ARRAY (Logica)
+            // splice(indice, 1) remove 1 elemento a partir da posição 'indice'.
+            // Isso atualiza o array 'catalogo'.
+            catalogo.splice(indice, 1);
+        }
+    </script>
+</body>
+</html>
