@@ -111,8 +111,64 @@
                 // Ao clicar, chamamos a função, passando o indice (posição) e a própria <div> (filmeDiv);
                     removerFilme( indice,filmeDiv );
        });
+
+       // C. ANEXAR ELEMENTOS (appendChild)
+       // Monta a estrutura hierárquica:
+       // filmeDiv
+       //   - tituloH3
+       //   - sinopseP
+       //   - removerBotao
+       filmeDiv.appenChild(tituloH3);
+        filmeDiv.appenChild(sinopseP);
+         filmeDiv.appenChild(removerBotao);
+
+         // D. INSERÇÃO NO DOM FINAL
+         // Adicionar o filme montado(filmeDiv) dentro do container principal na página.
+         listaFilmesContainer.appendChild(filmediv);
         }
 
+        //----------------------------------------------------------------
+        // FUNÇÃO PRINCIPAL DE ADIÇÃO (Manipulador do formulário)
+        //----------------------------------------------------------------
+        /**
+         *  lida com o envio do formlário, captura os dados e salva o filme.
+         * @param {Event} evento - O evento de 'submit' do formulário.
+         */
+        function adicionarFilme(evento) {
+        // 3. Previne o recarregador da página
+        // o comportamento padrão de um formulário é recarregar  a página. O preventDefault() impede isso.
+        evento.preventDefault();
+
+        // 4. Captura os valores dos campos
+        const tituloInput = document.getElementById('titulo');
+        const sinopseInput = document.getElementById('sinopse');
+
+        // criar o objeto Javainscript com os dados
+        const novoFilme ={
+            titulo: tituloInput.value,
+            sinopse: sinopseInput.value 
+        };
+
+        // 5.   Armazena o filme Array
+        // o método .push() adiciona o novo objeto no final do array 'catalogo'.
+        catalogo.push(novoFilme);
+
+        // 6. Renderiza na Tela
+        // passamos o novo objetivo de seu indice(que é sempre o último, ou seja, tamanho -1)
+        renderizarFilme(novoFilme, catalogo. length - 1);
+
+        // 7. limpa o formulário
+        // o método .reset() limpa todos os campos de formulário
+        form.reset();
+        }
+
+
+        // 8. ESCUTANDO O EVENTO DE BOTÃO/FORMULÁRIO
+        // Anexamos função 'adcionarFilme' ao evento de 'submit' do formulário
+        form.addEventListener('submit', adicionarFilme);
+
+        console.log("javaScript Carregando. Pronto para iniciar o catalogo!");
     </script>
+    
 </body>
 </html>
