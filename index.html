@@ -4,22 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo de Filmes</title>
+
     <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
     
     <h1>Catálogo de Filmes</h1>
 
     <form id="cadastro-filmes">
-        <h2>Adicionar Novo Filme</h2>
+        <h2>Adicionar Novo Filme (buscar por API)</h2>
         <div>
             <label for="titulo">Título do Filme</label>
             <input type="text" id="titulo" required>
-        </div>
-
-        <div>
-            <label for="sinopse">Sinopse:</label>
-            <textarea id="sinopse" required></textarea>
         </div>
 
         <button type="submit">Adicionar Filme</button>
@@ -34,39 +31,51 @@
     </div>
 
     <script>
-        // Array global para armazenar os filmes.
+        // A CHAVE SECRETA DA API OMDb (Substitua esta string pela sua chave real!)
+        const API_KEY = '72dcf75a';
+
+        // 1. ARMAZENAMENTO DE DADOS
         const catalogo = [];
 
-        // Captura os elementos do DOM
+        // 2. Captura os elementos do DOM (Document Object Model)
         const form = document.getElementById('cadastro-filmes');
+        const tituloInput = document.getElementById('titulo')
         const listaFilmesContainer = document.getElementById('lista-filmes');
 
-        // Função de remoção de filme
+        //---------------------------------------------------------------------
+        // Função de remoção (Mantida na Fase 1)
+        //---------------------------------------------------------------------
         function removerFilme(indice, elementoDOM) {
-            // Remove o filme do array
             catalogo.splice(indice, 1);
-
-            // Remove o filme do DOM
             elementoDOM.remove();
-
-            // Se a lista ficar vazia, exibe a mensagem
+1
             if (catalogo.length === 0) {
                 listaFilmesContainer.innerHTML = '<p>Nenhum filme cadastrado ainda.</p>';
             }
-
-            console.log(`Filme no índice ${indice} removido. Catálogo atualizado:`, catalogo);
         }
 
-        // Função de renderização do filme
+        //--------------------------------------------------------------------
+        // Função de renderização (Adaptada para incluir o Póster)
+        //--------------------------------------------------------------------
         function renderizarFilme(filme, indice) {
-            // Se for o primeiro filme, remove a mensagem inicial
             if (catalogo.length === 1) {
                 listaFilmesContainer.innerHTML = '';
             }
 
-            // Criação dos elementos HTML
             const filmeDiv = document.createElement('div');
             filmeDiv.classList.add('filme-item');
+
+            // A. Elemento Imagem (Póster)
+            const ImagemPoster = document.createElement('img');
+            ImagemPoster.src = filme.poster && filme.poster !==  'N/A'
+                               ?filme.poster
+                               : 'https://via.placeholder.com/100x150?text=Poster+Nao+disponivel';
+            ImagemPoster.alt = `Póster do filme ${filme.titulo}`;
+            ImagemPoster.classList.add('filme-poster');
+
+            // B. Elementos de Texto e Info
+            const infoDiv =  document.createElement('div');
+            infoDiv.classList.add('filme-info');
 
             const tituloH3 = document.createElement('h3');
             tituloH3.textContent = filme.titulo;
@@ -76,12 +85,8 @@
 
             const removerBotao = document.createElement('button');
             removerBotao.textContent = 'Remover';
-            removerBotao.classList.add('btn-remover');
 
-            // Adiciona o evento de remoção no botão
-            removerBotao.addEventListener('click', () => {
-                removerFilme(indice, filmeDiv);
-            });
+            
 
             // Adiciona os elementos ao DOM
             filmeDiv.appendChild(tituloH3);
