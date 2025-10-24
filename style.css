@@ -44,12 +44,12 @@ button:hover {
 }
 
 /* ------------------------------------------------------- */
-/* ESTILO PARA A FASE 2: LISTA COM POSTER (flexbox) */
+/* ESTILO PARA A FASE 2: LISTA COM PóSTER (flexbox) */
 /* ------------------------------------------------------- */
 
 /* Container do Filme: Organiza imagem de texto */
 .filme-item {
-    display: flex; /* habilita o halimento lado a lado */
+    display: flex; /* habilita o alinhamento lado a lado */
     align-items: flex-start; /* Alinha o conteúdo do topo */
 
     border: 1px solid #ddd;
@@ -60,19 +60,19 @@ button:hover {
     box-shadow: 0 1px 4px rbga(0,0,0,0.1);
 }
 
-/* Estilo do poster */
+/* Estilo do Póster */
 .filme-poster {
     width: 100px;
     height: 150px;
     object-fit: cover;
-    margin-right: 15px; /* Espaço entre o poster e o texto */
+    margin-right: 15px; /* Espaço entre o póster e o texto */
     border-radius: 4px;
     box-shadow: 0 0 5px rgba(0,0,0,0.2);
 }
 
 /* Estilo do bloco de informações */
 .filme-info {
-    flex-grow: 1; /* Ocupao eapaço restante */
+    flex-grow: 1; /* Ocupa o eapaço restante */
 }
 
 .filme-info h3 {
@@ -88,7 +88,7 @@ button:hover {
     line-height: 1.4;
 }
 
-/*Botão remover */
+/*Botão Remover */
 .filme-item .btn-remover {
     background-color: #dc3545;
     font-size: 0.8em;
