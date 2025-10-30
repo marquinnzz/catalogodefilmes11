@@ -5,28 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Catálogo de Filmes</title>
   <style>
-    /* Reset */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    /* Centralização e fundo */
     body {
       font-family: Arial, sans-serif;
       height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: #008000; /* fundo vinho */
+      background-color: #008000; /* fundo verde */
       color: #333;
     }
 
-    /* Container centralizado */
     .container {
       background: white;
-      border: 3px solid black; /* ✅ Borda preta ao redor */
+      border: 3px solid black;
       border-radius: 12px;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
       width: 90%;
@@ -83,7 +80,6 @@
       border-top: 1px solid #ccc;
     }
 
-    /* Estilo dos filmes */
     .filme-item {
       display: flex;
       align-items: flex-start;
@@ -100,7 +96,8 @@
       object-fit: cover;
       border-radius: 5px;
       margin-right: 15px;
-      border: 1px solid #ccc;
+      border: 3px solid transparent; /* será colorido dinamicamente */
+      transition: border-color 0.5s ease;
     }
 
     .filme-info {
@@ -185,6 +182,31 @@
       }
     }
 
+    // 🎨 Função que detecta cor média do pôster
+    function extrairCorMedia(img, callback) {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      ctx.drawImage(img, 0, 0);
+      try {
+        const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        let r = 0, g = 0, b = 0, total = 0;
+        for (let i = 0; i < data.length; i += 4) {
+          r += data[i];
+          g += data[i + 1];
+          b += data[i + 2];
+          total++;
+        }
+        r = Math.floor(r / total);
+        g = Math.floor(g / total);
+        b = Math.floor(b / total);
+        callback(`rgb(${r}, ${g}, ${b})`);
+      } catch {
+        callback('#888'); // fallback se imagem vier de outro domínio sem CORS
+      }
+    }
+
     function renderizarFilme(filme, indice) {
       if (indice === 0) listaFilmesContainer.innerHTML = '';
 
@@ -197,6 +219,12 @@
         : 'https://via.placeholder.com/100x150?text=Poster+Indisponível';
       imagemPoster.alt = `Pôster do filme ${filme.titulo}`;
       imagemPoster.classList.add('filme-poster');
+
+      imagemPoster.addEventListener('load', () => {
+        extrairCorMedia(imagemPoster, (cor) => {
+          imagemPoster.style.borderColor = cor;
+        });
+      });
 
       const infoDiv = document.createElement('div');
       infoDiv.classList.add('filme-info');
@@ -241,20 +269,15 @@
           let sinopse = dadosDoFilme.Plot;
           let tituloTraduzido = dadosDoFilme.Title;
 
-          // Se usuário escolher português, traduz
           if (idioma === 'pt') {
             try {
               const traducao = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(sinopse)}&langpair=en|pt`);
               const resultado = await traducao.json();
-              if (resultado.responseData?.translatedText) {
-                sinopse = resultado.responseData.translatedText;
-              }
+              if (resultado.responseData?.translatedText) sinopse = resultado.responseData.translatedText;
 
               const traducaoTitulo = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(tituloTraduzido)}&langpair=en|pt`);
               const resultadoTitulo = await traducaoTitulo.json();
-              if (resultadoTitulo.responseData?.translatedText) {
-                tituloTraduzido = resultadoTitulo.responseData.translatedText;
-              }
+              if (resultadoTitulo.responseData?.translatedText) tituloTraduzido = resultadoTitulo.responseData.translatedText;
             } catch {
               console.warn("Falha ao traduzir automaticamente.");
             }
