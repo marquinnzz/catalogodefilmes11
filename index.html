@@ -12,20 +12,21 @@
       box-sizing: border-box;
     }
 
-    /* Centralização */
+    /* Centralização e fundo */
     body {
       font-family: Arial, sans-serif;
       height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      background-color: #800000; /* Fundo vinho */
+      background-color: #800000; /* fundo vinho */
       color: #333;
     }
 
-    /* Container principal */
+    /* Container centralizado */
     .container {
       background: white;
+      border: 3px solid black; /* ✅ Borda preta ao redor */
       border-radius: 12px;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
       width: 90%;
@@ -78,6 +79,8 @@
 
     hr {
       margin: 20px 0;
+      border: none;
+      border-top: 1px solid #ccc;
     }
 
     /* Estilo dos filmes */
@@ -97,6 +100,7 @@
       object-fit: cover;
       border-radius: 5px;
       margin-right: 15px;
+      border: 1px solid #ccc;
     }
 
     .filme-info {
@@ -143,8 +147,8 @@
       <div style="margin-top: 10px;">
         <label for="idioma">Idioma:</label>
         <select id="idioma">
-          <option value="pt">Português</option>
-          <option value="en" selected>Inglês</option>
+          <option value="pt">Português 🇧🇷</option>
+          <option value="en" selected>Inglês 🇬🇧</option>
         </select>
       </div>
 
@@ -237,7 +241,7 @@
           let sinopse = dadosDoFilme.Plot;
           let tituloTraduzido = dadosDoFilme.Title;
 
-          // Traduz título e sinopse para português, se selecionado
+          // Se usuário escolher português, traduz
           if (idioma === 'pt') {
             try {
               const traducao = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(sinopse)}&langpair=en|pt`);
