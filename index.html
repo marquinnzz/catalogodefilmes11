@@ -4,31 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Catálogo de Filmes</title>
-  <link rel="stylesheet" href="style.css">
   <style>
-    /* Reset básico */
+    /* Reset */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    /* Centralização da página */
+    /* Centralização */
     body {
       font-family: Arial, sans-serif;
       height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #2b5876, #4e4376);
+      background-color: #800000; /* Fundo vinho */
       color: #333;
     }
 
-    /* Container central */
+    /* Container principal */
     .container {
       background: white;
       border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
       width: 90%;
       max-width: 700px;
       padding: 30px;
@@ -55,18 +54,26 @@
       margin-top: 5px;
     }
 
+    select {
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #aaa;
+      margin-left: 5px;
+    }
+
     button {
       padding: 8px 12px;
       cursor: pointer;
       border: none;
       border-radius: 5px;
-      background-color: #4e4376;
+      background-color: #800000;
       color: white;
       transition: 0.3s;
+      margin-top: 10px;
     }
 
     button:hover {
-      background-color: #2b5876;
+      background-color: #a00000;
     }
 
     hr {
@@ -132,7 +139,15 @@
         <label for="titulo">Título do Filme</label><br>
         <input type="text" id="titulo" required>
       </div>
-      <br>
+
+      <div style="margin-top: 10px;">
+        <label for="idioma">Idioma:</label>
+        <select id="idioma">
+          <option value="pt">Português</option>
+          <option value="en" selected>Inglês</option>
+        </select>
+      </div>
+
       <button type="submit">Buscar e Adicionar Filme</button>
     </form>
 
@@ -150,6 +165,7 @@
 
     const form = document.getElementById('cadastro-filmes');
     const tituloInput = document.getElementById('titulo');
+    const idiomaSelect = document.getElementById('idioma');
     const listaFilmesContainer = document.getElementById('lista-filmes');
 
     function salvarCatalogo() {
@@ -208,18 +224,41 @@
     async function adicionarFilme(evento) {
       evento.preventDefault();
       const titulo = tituloInput.value.trim();
+      const idioma = idiomaSelect.value;
       if (!titulo) return;
 
-      const url = `https://www.omdbapi.com/?apikey=${API_KEY}&t=${encodeURIComponent(titulo)}`;
+      const url = `https://www.omdbapi.com/?apikey=${API_KEY}&t=${encodeURIComponent(titulo)}&plot=full`;
 
       try {
         const resposta = await fetch(url);
         const dadosDoFilme = await resposta.json();
 
         if (dadosDoFilme.Response === "True") {
+          let sinopse = dadosDoFilme.Plot;
+          let tituloTraduzido = dadosDoFilme.Title;
+
+          // Traduz título e sinopse para português, se selecionado
+          if (idioma === 'pt') {
+            try {
+              const traducao = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(sinopse)}&langpair=en|pt`);
+              const resultado = await traducao.json();
+              if (resultado.responseData?.translatedText) {
+                sinopse = resultado.responseData.translatedText;
+              }
+
+              const traducaoTitulo = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(tituloTraduzido)}&langpair=en|pt`);
+              const resultadoTitulo = await traducaoTitulo.json();
+              if (resultadoTitulo.responseData?.translatedText) {
+                tituloTraduzido = resultadoTitulo.responseData.translatedText;
+              }
+            } catch {
+              console.warn("Falha ao traduzir automaticamente.");
+            }
+          }
+
           const novoFilme = {
-            titulo: dadosDoFilme.Title,
-            sinopse: dadosDoFilme.Plot,
+            titulo: tituloTraduzido,
+            sinopse: sinopse,
             poster: dadosDoFilme.Poster
           };
 
