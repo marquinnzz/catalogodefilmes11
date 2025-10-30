@@ -6,40 +6,82 @@
   <title>Catálogo de Filmes</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Estilos básicos para exibição */
+    /* Reset básico */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Centralização da página */
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
-      background: #f5f5f5;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #2b5876, #4e4376);
+      color: #333;
+    }
+
+    /* Container central */
+    .container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+      width: 90%;
+      max-width: 700px;
+      padding: 30px;
+      overflow-y: auto;
+      max-height: 90vh;
     }
 
     h1, h2 {
       text-align: center;
+      margin-bottom: 15px;
+      color: #222;
     }
 
     form {
-      margin-bottom: 20px;
       text-align: center;
+      margin-bottom: 20px;
     }
 
     input {
       padding: 8px;
-      margin-right: 10px;
+      width: 60%;
+      border: 1px solid #aaa;
+      border-radius: 5px;
+      margin-top: 5px;
     }
 
     button {
       padding: 8px 12px;
       cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: #4e4376;
+      color: white;
+      transition: 0.3s;
     }
 
+    button:hover {
+      background-color: #2b5876;
+    }
+
+    hr {
+      margin: 20px 0;
+    }
+
+    /* Estilo dos filmes */
     .filme-item {
       display: flex;
       align-items: flex-start;
-      background: white;
+      background: #fafafa;
       border-radius: 8px;
       padding: 10px;
       margin-bottom: 10px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
     }
 
     .filme-poster {
@@ -54,6 +96,11 @@
       flex: 1;
     }
 
+    .filme-info h3 {
+      margin-bottom: 8px;
+      color: #222;
+    }
+
     .btn-remover {
       background: #ff5555;
       color: white;
@@ -61,27 +108,40 @@
       border-radius: 4px;
       padding: 5px 10px;
       margin-top: 10px;
+      cursor: pointer;
+    }
+
+    .btn-remover:hover {
+      background: #e33;
+    }
+
+    #lista-filmes p {
+      text-align: center;
+      color: #777;
     }
   </style>
 </head>
 <body>
   
-  <h1>Catálogo de Filmes</h1>
+  <div class="container">
+    <h1>Catálogo de Filmes</h1>
 
-  <form id="cadastro-filmes">
-    <h2>Adicionar Novo Filme (buscar por API)</h2>
-    <div>
-      <label for="titulo">Título do Filme</label>
-      <input type="text" id="titulo" required>
+    <form id="cadastro-filmes">
+      <h2>Adicionar Novo Filme (buscar por API)</h2>
+      <div>
+        <label for="titulo">Título do Filme</label><br>
+        <input type="text" id="titulo" required>
+      </div>
+      <br>
+      <button type="submit">Buscar e Adicionar Filme</button>
+    </form>
+
+    <hr>
+
+    <h2>Minha Lista de Filmes</h2>
+    <div id="lista-filmes">
+      <p>Nenhum filme cadastrado ainda.</p>
     </div>
-    <button type="submit">Buscar e Adicionar Filme</button>
-  </form>
-
-  <hr>
-
-  <h2>Minha Lista de Filmes</h2>
-  <div id="lista-filmes">
-    <p>Nenhum filme cadastrado ainda.</p>
   </div>
 
   <script>
@@ -92,7 +152,6 @@
     const tituloInput = document.getElementById('titulo');
     const listaFilmesContainer = document.getElementById('lista-filmes');
 
-    // Salvar no localStorage
     function salvarCatalogo() {
       localStorage.setItem('catalogo', JSON.stringify(catalogo));
     }
@@ -178,7 +237,6 @@
       form.reset();
     }
 
-    // Recarregar lista ao abrir a página
     function carregarCatalogo() {
       if (catalogo.length > 0) {
         listaFilmesContainer.innerHTML = '';
